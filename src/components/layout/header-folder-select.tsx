@@ -6,27 +6,53 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useMediaStore } from "@/stores/media-store";
+import { useNavigate, useParams } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 
 export const HeaderSelect = () => {
-  const placeholder = (
-    <span className="flex items-center gap-2">
-      <Folder />
-      Your folder
-    </span>
-  );
+  const [selected, setSelected] = useState<string | undefined>();
+  const navigate = useNavigate({ from: "/" });
+  const { folderId } = useParams({ strict: false });
+  const mediaStore = useMediaStore();
+
+  const placeholder = <span>Select folder</span>;
+
+  const folders = mediaStore.folders.map((folder) => ({
+    value: `/${folder.id}`,
+    label: folder.title,
+  }));
+
+  const onSelectChange = (value: string) => {
+    const stringifiedValue = `/${value}`;
+    setSelected(stringifiedValue);
+    navigate({
+      to: stringifiedValue,
+    });
+  };
+
+  useEffect(() => {
+    setSelected(`/${folderId}`);
+  }, [folderId]);
 
   return (
-    <Select>
+    <Select value={selected} onValueChange={onSelectChange}>
       <SelectTrigger className="w-[150px]">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="est">Eastern Standard Time (EST)</SelectItem>
-        <SelectItem value="cst">Central Standard Time (CST)</SelectItem>
-        <SelectItem value="mst">Mountain Standard Time (MST)</SelectItem>
-        <SelectItem value="pst">Pacific Standard Time (PST)</SelectItem>
-        <SelectItem value="akst">Alaska Standard Time (AKST)</SelectItem>
-        <SelectItem value="hst">Hawaii Standard Time (HST)</SelectItem>
+        {folders.map((folder) => (
+          <SelectItem
+            className="flex gap-2"
+            key={folder.value}
+            value={folder.value}
+          >
+            <span className="flex items-center gap-2">
+              <Folder />
+              {folder.label}
+            </span>
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   );

@@ -1,4 +1,3 @@
-import Logo from "@/assets/icons/logo.svg";
 import {
   Sidebar,
   SidebarContent,
@@ -11,9 +10,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { Link } from "@tanstack/react-router";
+import Logo from "@/assets/icons/logo.svg";
+import { cn } from "@/lib/utils";
+import { FILTER_SECTION } from "@/mock/mock-data";
+import { useMediaStore } from "@/stores/media-store";
+import { MediaTypes } from "../../mock/types";
 import {
   Accordion,
   AccordionContent,
@@ -21,10 +25,20 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { Checkbox } from "../ui/checkbox";
-import { FILTER_SECTION, FOLDER_SECTION } from "./mock-data";
-import { MediaTypes } from "./types";
+import { AddNewFolderDialog } from "./components/add-new-folder-dialog";
 
 export function AppSidebar() {
+  const { folderId } = useParams({ strict: false });
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate({ from: `/$folderId` });
+
+  const handleOpenAddFolder = (open: boolean) => {
+    setIsOpen(open);
+  };
+
+  const mediaStore = useMediaStore();
+  const folders = mediaStore.folders;
+
   const [childChecked, setChildChecked] = useState<Record<number, boolean>>(
     () =>
       FILTER_SECTION.reduce(
@@ -45,7 +59,12 @@ export function AppSidebar() {
       ? false
       : "indeterminate";
 
+  // change the parent checkbox value based on the child checkboxes
   const handleParentChange = (checked: boolean) => {
+    const selectedTypes = checked
+      ? FILTER_SECTION.map((item) => item.type)
+      : [];
+
     setChildChecked(
       Object.keys(childChecked).reduce(
         (acc, key) => {
@@ -55,6 +74,13 @@ export function AppSidebar() {
         {} as Record<number, boolean>
       )
     );
+
+    navigate({
+      to: `/$folderId`,
+      search: {
+        types: selectedTypes,
+      },
+    });
   };
 
   const handleChildChange = (id: number) => (checked: boolean) => {
@@ -62,7 +88,37 @@ export function AppSidebar() {
       ...prev,
       [id]: checked,
     }));
+
+    const updatedSelectedTypes = FILTER_SECTION.filter((item) =>
+      id === item.id ? checked : !!childChecked[item.id]
+    ).map((item) => item.type);
+
+    navigate({
+      to: `/$folderId`,
+      search: {
+        types: updatedSelectedTypes,
+      },
+    });
   };
+
+  const accumulatedTypes: Record<
+    Exclude<MediaTypes, MediaTypes.FOLDER>,
+    number
+  > = {
+    [MediaTypes.IMAGES]: 0,
+    [MediaTypes.GIFS]: 0,
+    [MediaTypes.VIDEOS]: 0,
+  };
+
+  const filteredMediaAggregation =
+    folders
+      .find((f) => f.id === Number(folderId))
+      ?.children?.reduce((accum, child) => {
+        if (child.type) {
+          accum[child.type] += 1;
+        }
+        return accum;
+      }, accumulatedTypes) || accumulatedTypes;
 
   return (
     <Sidebar collapsible="none">
@@ -79,19 +135,35 @@ export function AppSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {FOLDER_SECTION.map((item) => (
+              {folders.map((item) => (
                 <SidebarMenuItem key={item.id}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton
+                    className={cn(
+                      folderId === String(item.id) && "bg-slate-100"
+                    )}
+                    asChild
+                  >
                     <Link
                       to={`/$folderId`}
                       params={{ folderId: String(item.id) }}
                     >
                       {item.type === MediaTypes.FOLDER && <item.icon />}
                       <span>{item.title}</span>
+                      <span className="text-gray-400">
+                        {item.children?.length}
+                      </span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <AddNewFolderDialog
+                    isOpen={isOpen}
+                    handleOpenAddFolder={handleOpenAddFolder}
+                  />
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -126,6 +198,10 @@ export function AppSidebar() {
                             <span className="flex gap-2 items-center">
                               {item.isFilter === true && <item.icon />}
                               <span>{item.title}</span>
+                              <span className="text-gray-400">
+                                {item.type &&
+                                  filteredMediaAggregation[item.type]}
+                              </span>
                             </span>
                             <Checkbox
                               id={`child-${item.id}`}

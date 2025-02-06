@@ -1,85 +1,136 @@
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
-import { MediaTypes } from "../app-sidebar/types";
+import { useSelectedMedia } from "@/stores/selected-media-store";
+import { useState } from "react";
+import { DataSidebarProps, MediaTypes } from "../../mock/types";
+import { Input } from "../ui/input";
 import { MediaGridProps } from "./types";
 
-export function MediaGrid({ mediaItems, folderId }: MediaGridProps) {
-  const [items, setItems] = useState(mediaItems);
-  const [selected, setSelected] = useState<number[]>([]);
+type MediaGridPropsWithUpdate = MediaGridProps & {
+  onTitleUpdate?: (id: number, newTitle: string) => void;
+};
 
-  useEffect(() => {
-    setItems(mediaItems);
-  }, [folderId]);
+export function MediaGrid({
+  mediaItems,
+  onTitleUpdate,
+}: MediaGridPropsWithUpdate) {
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+
+  const store = useSelectedMedia();
+  const addMediaId = store.addMediaId;
+  const removeMediaId = store.removeMediaId;
+  const selectedIds = store.selected;
 
   const toggleSelect = (id: number) => {
-    setSelected((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((itemId) => itemId !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
+    if (selectedIds.includes(id)) {
+      removeMediaId(id);
+    } else {
+      addMediaId(id);
+    }
   };
 
-  const handleDelete = () => {
-    setItems((prev) => prev.filter((item) => !selected.includes(item.id)));
-    setSelected([]);
+  const isSelected = (id: number) => selectedIds.includes(id);
+
+  const displayImagesAndGifs = (item: DataSidebarProps) =>
+    (item.type === MediaTypes.IMAGES || item.type === MediaTypes.GIFS) &&
+    !item.isFilter &&
+    item.url && (
+      <img
+        src={item.url}
+        alt={item.title}
+        className="w-full h-auto object-contain rounded"
+      />
+    );
+
+  const displayVideos = (item: DataSidebarProps) => {
+    return (
+      item.type === MediaTypes.VIDEOS &&
+      !item.isFilter &&
+      item.url && (
+        <video
+          src={item.url}
+          className="w-full h-auto object-contain rounded"
+          preload="metadata"
+          muted
+        />
+      )
+    );
+  };
+
+  const handleTitleDoubleClick = (item: DataSidebarProps) => {
+    setEditingId(item.id);
+    setEditTitle(item.title);
+  };
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditTitle(e.target.value);
+  };
+
+  const finishEditing = (item: DataSidebarProps) => {
+    if (onTitleUpdate) {
+      onTitleUpdate(item.id, editTitle);
+    }
+    setEditingId(null);
+  };
+
+  const handleTitleBlur = (item: DataSidebarProps) => {
+    finishEditing(item);
+  };
+
+  const handleTitleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    item: DataSidebarProps
+  ) => {
+    if (e.key === "Enter") {
+      finishEditing(item);
+    }
   };
 
   return (
-    <div>
+    <div className="mt-2">
       <div className="grid grid-cols-6 gap-4 auto-rows-[1fr]">
-        {items.map((item) => (
-          <div key={item.id} className="h-full">
+        {mediaItems.map((item) => (
+          <div key={item.id} className="h-full grid grid-rows-[1fr,auto]">
             <div
               className={cn(
                 "relative cursor-pointer flex justify-center flex-col p-1",
-                selected.includes(item.id) &&
-                  "border-1 border-[#1677FF] rounded-sm bg-[#1677FF30]"
+                isSelected(item.id) &&
+                  "border border-[#1677FF] rounded-sm bg-[#1677FF30]"
               )}
               onClick={() => toggleSelect(item.id)}
             >
-              {(item.type === MediaTypes.IMAGES ||
-                item.type === MediaTypes.GIFS) &&
-                !item.isFilter &&
-                item.url && (
-                  <img
-                    src={item.url}
-                    alt={item.title}
-                    className="w-full h-auto object-contain rounded"
-                  />
-                )}
-              {item.type === MediaTypes.VIDEOS &&
-                !item.isFilter &&
-                item.url && (
-                  <video
-                    src={item.url}
-                    className="w-full h-auto object-contain rounded"
-                    preload="metadata"
-                    muted
-                  />
-                )}
-              {selected.includes(item.id) && (
+              {displayImagesAndGifs(item)}
+              {displayVideos(item)}
+              {isSelected(item.id) && (
                 <div className="absolute bottom-2 left-2 flex h-6 w-6 items-center justify-center rounded-md bg-blue-500 text-white text-xs">
-                  {selected.indexOf(item.id) + 1}
+                  {selectedIds.indexOf(item.id) + 1}
                 </div>
               )}
             </div>
-            <span className="flex justify-center h-6 w-full text-xs">
-              {item.title}
-            </span>
+            <div
+              className={cn(
+                "flex justify-center h-6 w-full text-xs",
+                isSelected(item.id) && "text-[#1677FF]"
+              )}
+              onDoubleClick={() => handleTitleDoubleClick(item)}
+            >
+              {editingId === item.id ? (
+                <Input
+                  type="text"
+                  value={editTitle}
+                  onChange={handleTitleChange}
+                  onBlur={() => handleTitleBlur(item)}
+                  onKeyDown={(e) => handleTitleKeyDown(e, item)}
+                  className="text-xs text-center h-3"
+                  autoFocus
+                />
+              ) : (
+                item.title
+              )}
+            </div>
           </div>
         ))}
       </div>
-
-      {selected.length > 0 && (
-        <button
-          onClick={handleDelete}
-          className="mt-4 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-        >
-          Delete Selected
-        </button>
-      )}
     </div>
   );
 }

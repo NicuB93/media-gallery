@@ -3,9 +3,9 @@ import GIF from "@/assets/icons/gif.svg";
 import Media from "@/assets/icons/media.svg";
 import Video from "@/assets/icons/play.svg";
 
-import { DataSidebarProps, MediaTypes } from "./types";
+import { FilterProps, FolderProps, MediaTypes } from "./types";
 
-export const FOLDER_SECTION: DataSidebarProps[] = [
+export const FOLDER_SECTION: FolderProps[] = [
   {
     title: "Folder 1",
     id: 1,
@@ -15,73 +15,73 @@ export const FOLDER_SECTION: DataSidebarProps[] = [
       {
         title: "mock image",
         url: "https://picsum.photos/300/200",
-        id: 6,
+        id: 101,
         type: MediaTypes.IMAGES,
       },
       {
         title: "mock image",
         url: "https://picsum.photos/300/202",
-        id: 7,
+        id: 102,
         type: MediaTypes.IMAGES,
       },
       {
         title: "mock video",
         url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-        id: 8,
+        id: 103,
         type: MediaTypes.VIDEOS,
       },
       {
         title: "mock gif",
         url: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTQybHc1cXF3ZzM1Yjg2NXJmcnV3NXd1a3UzaXdjcG1mM21oa2I0NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pqMSyHmekA1Qe7Utp7/giphy.gif",
-        id: 9,
+        id: 104,
         type: MediaTypes.GIFS,
       },
     ],
   },
   {
     title: "Folder 2",
-    id: 10,
+    id: 2,
     icon: Folder,
     type: MediaTypes.FOLDER,
     children: [
       {
         title: "mock image",
         url: "https://picsum.photos/300/204",
-        id: 6,
+        id: 105,
         type: MediaTypes.IMAGES,
       },
       {
         title: "mock image",
         url: "https://picsum.photos/300/207",
-        id: 7,
+        id: 106,
+        type: MediaTypes.IMAGES,
+      },
+      {
+        title: "mock image",
+        url: "https://picsum.photos/300/209",
+        id: 107,
         type: MediaTypes.IMAGES,
       },
       {
         title: "mock video",
         url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-        id: 8,
+        id: 108,
         type: MediaTypes.VIDEOS,
       },
       {
         title: "mock gif",
         url: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTQybHc1cXF3ZzM1Yjg2NXJmcnV3NXd1a3UzaXdjcG1mM21oa2I0NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pqMSyHmekA1Qe7Utp7/giphy.gif",
-        id: 9,
+        id: 109,
         type: MediaTypes.GIFS,
       },
     ],
   },
-  {
-    title: "New folder",
-    type: MediaTypes.FOLDER,
-    id: 2,
-    icon: Folder,
-  },
 ];
 
-export const FILTER_SECTION: DataSidebarProps[] = [
+export const FILTER_SECTION: FilterProps[] = [
   {
     title: "Images",
-    id: 3,
+    id: 201,
     type: MediaTypes.IMAGES,
     icon: Media,
     isFilter: true,
@@ -89,7 +89,7 @@ export const FILTER_SECTION: DataSidebarProps[] = [
   },
   {
     title: "Videos",
-    id: 4,
+    id: 202,
     type: MediaTypes.VIDEOS,
     icon: Video,
     isFilter: true,
@@ -97,7 +97,7 @@ export const FILTER_SECTION: DataSidebarProps[] = [
   },
   {
     title: "GIFs",
-    id: 5,
+    id: 203,
     type: MediaTypes.GIFS,
     icon: GIF,
     isFilter: true,
