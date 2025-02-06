@@ -14,7 +14,7 @@ export const FOLDER_SECTION: FolderProps[] = [
     children: [
       {
         title: "mock image",
-        url: "https://picsum.photos/300/200",
+        url: "https://logos-world.net/wp-content/uploads/2022/05/Google-Photos-Logo.png",
         id: 101,
         type: MediaTypes.IMAGES,
       },

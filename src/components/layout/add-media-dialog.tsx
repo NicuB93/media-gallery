@@ -66,7 +66,10 @@ export function AddMediaDialog({
             onChange={handleNameChange}
             value={mediaName}
           />
-          <Label htmlFor="url">Media URL</Label>
+          <Label htmlFor="url">
+            Media URL (only the ones from picsum works now, other links will
+            throw CORS error)
+          </Label>
           <Input
             placeholder="Media url"
             id="url"

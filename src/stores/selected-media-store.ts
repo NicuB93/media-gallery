@@ -1,18 +1,7 @@
 import { create } from "zustand";
+import { SelectedMediaType } from "./types";
 
-type State = {
-  selected: number[];
-};
-
-type Action = {
-  addMediaId: (id: number) => void;
-  removeAllMediaIds: () => void;
-  addMultipleMediaIds: (ids: number[]) => void;
-  removeMediaId: (id: number) => void;
-  removeMultipleMediaIds: (ids: number[]) => void;
-};
-
-export const useSelectedMedia = create<State & Action>((set) => ({
+export const useSelectedMedia = create<SelectedMediaType>((set) => ({
   selected: [],
   addMediaId: (id: number) =>
     set((state) => ({

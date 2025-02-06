@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { FILTER_SECTION } from "@/mock/mock-data";
 import { useMediaStore } from "@/stores/media-store";
 import { MediaTypes } from "../../mock/types";
+import { DroppableFolder } from "../drag-and-drop/droppable-media";
 import {
   Accordion,
   AccordionContent,
@@ -136,25 +137,27 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {folders.map((item) => (
-                <SidebarMenuItem key={item.id}>
-                  <SidebarMenuButton
-                    className={cn(
-                      folderId === String(item.id) && "bg-slate-100"
-                    )}
-                    asChild
-                  >
-                    <Link
-                      to={`/$folderId`}
-                      params={{ folderId: String(item.id) }}
+                <DroppableFolder key={item.id} folderId={item.id}>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      className={cn(
+                        folderId === String(item.id) && "bg-slate-100"
+                      )}
+                      asChild
                     >
-                      {item.type === MediaTypes.FOLDER && <item.icon />}
-                      <span>{item.title}</span>
-                      <span className="text-gray-400">
-                        {item.children?.length}
-                      </span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                      <Link
+                        to={`/$folderId`}
+                        params={{ folderId: String(item.id) }}
+                      >
+                        {item.type === MediaTypes.FOLDER && <item.icon />}
+                        <span>{item.title}</span>
+                        <span className="text-gray-400">
+                          {item.children?.length}
+                        </span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </DroppableFolder>
               ))}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
