@@ -15,13 +15,13 @@ import { useState } from "react";
 
 // Normally here, I would add a DB and create a folder in the cloud storage to save the media files.
 
-export function AddNewFolderDialog({
+export const AddNewFolderDialog = ({
   isOpen,
   handleOpenAddFolder,
 }: {
   isOpen: boolean;
   handleOpenAddFolder: (open: boolean) => void;
-}) {
+}) => {
   const [folderName, setFolderName] = useState("");
   const mediaStore = useMediaStore();
   const addFolder = mediaStore.addFolder;
@@ -65,4 +65,4 @@ export function AddNewFolderDialog({
       </DialogContent>
     </Dialog>
   );
-}
+};

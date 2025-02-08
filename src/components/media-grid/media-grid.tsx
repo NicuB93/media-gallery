@@ -1,26 +1,32 @@
 import { DataSidebarProps } from "@/mock/types";
 import { useSelectedMedia } from "@/stores/selected-media-store";
-import { useState } from "react";
+import { useParams } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { DraggableMediaItem } from "../drag-and-drop/draggable-media";
 import { MediaGridProps } from "./types";
 
-type MediaGridPropsWithUpdate = MediaGridProps & {
-  onTitleUpdate?: (id: number, newTitle: string) => void;
-};
-
-export function MediaGrid({
+export const MediaGrid = ({
   mediaItems,
+  disabledSelection,
   onTitleUpdate,
-}: MediaGridPropsWithUpdate) {
+}: MediaGridProps) => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editTitle, setEditTitle] = useState("");
+
+  const params = useParams({ strict: false });
 
   const store = useSelectedMedia();
   const addMediaId = store.addMediaId;
   const removeMediaId = store.removeMediaId;
+  const removeAllMediaIds = store.removeAllMediaIds;
   const selectedIds = store.selected;
 
   const toggleSelect = (id: number) => {
+    // disable selection if root folder is displayed
+    if (disabledSelection) {
+      return;
+    }
+
     if (selectedIds.includes(id)) {
       removeMediaId(id);
     } else {
@@ -32,8 +38,10 @@ export function MediaGrid({
 
   // Inline title editing handlers.
   const handleTitleDoubleClick = (item: DataSidebarProps) => {
-    setEditingId(item.id);
-    setEditTitle(item.title);
+    if (onTitleUpdate) {
+      setEditingId(item.id);
+      setEditTitle(item.title);
+    }
   };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,6 +68,10 @@ export function MediaGrid({
     }
   };
 
+  useEffect(() => {
+    removeAllMediaIds();
+  }, [params]);
+
   return (
     <div className="mt-2">
       <div className="grid grid-cols-6 gap-4 auto-rows-[1fr]">
@@ -81,4 +93,4 @@ export function MediaGrid({
       </div>
     </div>
   );
-}
+};

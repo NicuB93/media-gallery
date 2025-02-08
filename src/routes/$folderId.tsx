@@ -2,7 +2,7 @@ import { MediaGrid } from "@/components/media-grid/media-grid";
 import { useFilterTypes } from "@/hooks/use-filter-types";
 import { MediaTypes } from "@/mock/types";
 import { useMediaStore } from "@/stores/media-store";
-import { createFileRoute, useParams } from "@tanstack/react-router";
+import { createFileRoute, useParams, useSearch } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$folderId")({
   component: FolderPage,
@@ -12,6 +12,9 @@ function FolderPage() {
   const { folderId } = useParams({ strict: false });
   const mediaStore = useMediaStore();
   const searchTypes = useFilterTypes();
+  const { search_query }: { search_query: string } = useSearch({
+    strict: false,
+  });
 
   const folderFiles = mediaStore.folders.filter(
     (item) => item.type === MediaTypes.FOLDER
@@ -25,10 +28,17 @@ function FolderPage() {
 
   const folderWithFilteredChildren = folder?.children?.filter((item) => {
     if (searchTypes.length > 0) {
-      return searchTypes.includes(item.type);
+      return (
+        searchTypes.includes(item.type) &&
+        (search_query
+          ? item.title.toLowerCase().includes(search_query.toLowerCase())
+          : true)
+      );
     }
 
-    return true;
+    return search_query
+      ? item.title.toLowerCase().includes(search_query.toLowerCase())
+      : true;
   });
 
   return (

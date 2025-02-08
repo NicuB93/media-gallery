@@ -18,13 +18,13 @@ import { useState } from "react";
 // Normally here, I would add a DB and some cloud storage to save the media files.
 // Now only URL of the media is saved. (like https://fastly.picsum.photos/).
 
-export function AddMediaDialog({
+export const AddMediaDialog = ({
   isOpen,
   handleOpenAddFolder,
 }: {
   isOpen: boolean;
   handleOpenAddFolder: (open: boolean) => void;
-}) {
+}) => {
   const [mediaName, setMediaName] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
   const { folderId } = useParams({ strict: false });
@@ -83,4 +83,4 @@ export function AddMediaDialog({
       </DialogContent>
     </Dialog>
   );
-}
+};

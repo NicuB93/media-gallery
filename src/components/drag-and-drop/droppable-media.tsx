@@ -6,7 +6,10 @@ type DroppableFolderProps = {
   children: ReactNode;
 };
 
-export function DroppableFolder({ folderId, children }: DroppableFolderProps) {
+export const DroppableFolder = ({
+  folderId,
+  children,
+}: DroppableFolderProps) => {
   const { isOver, setNodeRef } = useDroppable({
     id: `folder-${folderId}`,
   });
@@ -20,4 +23,4 @@ export function DroppableFolder({ folderId, children }: DroppableFolderProps) {
       {children}
     </div>
   );
-}
+};

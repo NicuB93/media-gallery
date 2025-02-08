@@ -8,9 +8,10 @@ import {
 } from "@/components/ui/select";
 import { useMediaStore } from "@/stores/media-store";
 import { useNavigate, useParams } from "@tanstack/react-router";
+import { FileStack } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export const HeaderSelect = () => {
+export const HeaderSelectFolder = () => {
   const [selected, setSelected] = useState<string | undefined>();
   const navigate = useNavigate({ from: "/" });
   const { folderId } = useParams({ strict: false });
@@ -24,15 +25,26 @@ export const HeaderSelect = () => {
   }));
 
   const onSelectChange = (value: string) => {
-    const stringifiedValue = `/${value}`;
-    setSelected(stringifiedValue);
-    navigate({
-      to: stringifiedValue,
-    });
+    if (value === "root") {
+      setSelected("root");
+      navigate({
+        to: "/",
+      });
+    } else {
+      const stringifiedValue = `/${value}`;
+      setSelected(stringifiedValue);
+      navigate({
+        to: stringifiedValue,
+      });
+    }
   };
 
   useEffect(() => {
-    setSelected(`/${folderId}`);
+    if (folderId === undefined) {
+      setSelected("root");
+    } else {
+      setSelected(`/${folderId}`);
+    }
   }, [folderId]);
 
   return (
@@ -41,6 +53,12 @@ export const HeaderSelect = () => {
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
+        <SelectItem className="flex gap-2" key={"all-files"} value="root">
+          <span className="flex items-center gap-2">
+            <FileStack size={16} />
+            All Files
+          </span>
+        </SelectItem>
         {folders.map((folder) => (
           <SelectItem
             className="flex gap-2"

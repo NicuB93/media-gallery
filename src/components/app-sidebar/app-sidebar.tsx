@@ -28,7 +28,7 @@ import {
 import { Checkbox } from "../ui/checkbox";
 import { AddNewFolderDialog } from "./components/add-new-folder-dialog";
 
-export function AppSidebar() {
+export const AppSidebar = () => {
   const { folderId } = useParams({ strict: false });
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate({ from: `/$folderId` });
@@ -229,4 +229,4 @@ export function AppSidebar() {
       <SidebarFooter />
     </Sidebar>
   );
-}
+};

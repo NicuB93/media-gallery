@@ -3,9 +3,9 @@ import { useMediaStore } from "@/stores/media-store";
 import { useSelectedMedia } from "@/stores/selected-media-store";
 import { useParams } from "@tanstack/react-router";
 import { ReactNode, useEffect } from "react";
-import { MediaTypes } from "../../mock/types";
+import { MediaTypes } from "../../../mock/types";
 
-export const CheckboxWithText = ({ children }: { children?: ReactNode }) => {
+export const HeaderCheckbox = ({ children }: { children?: ReactNode }) => {
   const { folderId } = useParams({ strict: false });
   const selectedMediaStore = useSelectedMedia();
   const mediaStore = useMediaStore();
@@ -14,6 +14,7 @@ export const CheckboxWithText = ({ children }: { children?: ReactNode }) => {
   const folder = mediaStore.folders.find(
     (f) => f.type === MediaTypes.FOLDER && f.id === Number(folderId)
   );
+
   const getCheckboxState = () => {
     if (!folder) {
       return false;

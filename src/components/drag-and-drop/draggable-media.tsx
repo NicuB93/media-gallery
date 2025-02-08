@@ -5,7 +5,7 @@ import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { DNGMediaItemType } from "./types";
 
-export function DraggableMediaItem({
+export const DraggableMediaItem = ({
   item,
   isSelected,
   toggleSelect,
@@ -16,7 +16,7 @@ export function DraggableMediaItem({
   handleTitleBlur,
   handleTitleKeyDown,
   selectedIds,
-}: DNGMediaItemType) {
+}: DNGMediaItemType) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: String(item.id),
@@ -100,4 +100,4 @@ export function DraggableMediaItem({
       </div>
     </div>
   );
-}
+};
