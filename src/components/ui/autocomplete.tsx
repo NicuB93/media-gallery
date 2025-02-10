@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
 
 export interface AutocompleteItem {
@@ -37,7 +37,22 @@ export interface ControlledAutocompleteProps {
 }
 
 /**
- * Autocomplete with arrow key navigation (including "Show all results" as highlightable).
+ * Autocomplete component for providing suggestions as the user types.
+ *
+ * @param {Object} props - The properties object.
+ * @param {string} props.value - The current value of the input.
+ * @param {function} props.onChange - Callback function to handle input value changes.
+ * @param {boolean} props.open - Whether the dropdown is open.
+ * @param {function} props.onOpenChange - Callback function to handle dropdown open state changes.
+ * @param {Array} props.items - List of items to display in the dropdown.
+ * @param {function} props.onSelectItem - Callback function to handle item selection.
+ * @param {function} [props.onEnter] - Optional callback function to handle Enter key press with typed text.
+ * @param {boolean} props.hasMore - Whether there are more items to show.
+ * @param {function} [props.onShowAll] - Optional callback function to handle "Show all results" selection.
+ * @param {string} [props.placeholder="Search..."] - Placeholder text for the input.
+ * @param {string} [props.className] - Additional class names for the container.
+ *
+ * @returns {JSX.Element} The rendered Autocomplete component.
  */
 export function Autocomplete({
   value,

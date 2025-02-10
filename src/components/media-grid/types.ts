@@ -1,7 +1,7 @@
-import { DataSidebarProps } from "../../mock/types";
+import { MediaProps } from "../../mock/types";
 
 export type MediaGridProps = {
-  mediaItems: DataSidebarProps[];
+  mediaItems: MediaProps[];
   onTitleUpdate?: (id: number, newTitle: string) => void;
   disabledSelection?: boolean;
 };

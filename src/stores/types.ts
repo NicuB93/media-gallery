@@ -20,6 +20,8 @@ type MediaStoreStateType = {
 };
 
 type MediaStoreActionType = {
+  getFolder: (folderId: number) => FolderProps | undefined;
+  getAllFiles: () => FolderProps["children"];
   addFolder: (folder: FolderProps["title"]) => void;
   removeFolder: (folderId: number) => void;
   updateFolder: (folder: FolderProps) => void;

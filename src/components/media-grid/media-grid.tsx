@@ -1,4 +1,4 @@
-import { DataSidebarProps } from "@/mock/types";
+import { MediaProps } from "@/mock/types";
 import { useSelectedMedia } from "@/stores/selected-media-store";
 import { useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -37,7 +37,7 @@ export const MediaGrid = ({
   const isSelected = (id: number) => selectedIds.includes(id);
 
   // Inline title editing handlers.
-  const handleTitleDoubleClick = (item: DataSidebarProps) => {
+  const handleTitleDoubleClick = (item: MediaProps) => {
     if (onTitleUpdate) {
       setEditingId(item.id);
       setEditTitle(item.title);
@@ -48,20 +48,20 @@ export const MediaGrid = ({
     setEditTitle(e.target.value);
   };
 
-  const finishEditing = (item: DataSidebarProps) => {
+  const finishEditing = (item: MediaProps) => {
     if (onTitleUpdate) {
       onTitleUpdate(item.id, editTitle);
     }
     setEditingId(null);
   };
 
-  const handleTitleBlur = (item: DataSidebarProps) => {
+  const handleTitleBlur = (item: MediaProps) => {
     finishEditing(item);
   };
 
   const handleTitleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    item: DataSidebarProps
+    item: MediaProps
   ) => {
     if (e.key === "Enter") {
       finishEditing(item);
@@ -73,7 +73,7 @@ export const MediaGrid = ({
   }, [params]);
 
   return (
-    <div className="mt-2">
+    <div className="mt-2 p-2">
       <div className="grid grid-cols-6 gap-4 auto-rows-[1fr]">
         {mediaItems.map((item) => (
           <DraggableMediaItem

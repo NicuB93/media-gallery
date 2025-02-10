@@ -1,4 +1,6 @@
 import { MediaGrid } from "@/components/media-grid/media-grid";
+import { useFilterTypes } from "@/hooks/use-filter-types";
+import { getFilteredData } from "@/lib/utils/url-query-data-filter";
 import { useMediaStore } from "@/stores/media-store";
 import { createFileRoute, useSearch } from "@tanstack/react-router";
 
@@ -11,14 +13,14 @@ function Index() {
   const { search_query }: { search_query: string } = useSearch({
     strict: false,
   });
+  const searchTypes = useFilterTypes();
 
-  const allFilteredFiles = mediaStore.folders
-    .flatMap((folder) => folder.children || [])
-    .filter((item) =>
-      search_query
-        ? item.title.toLowerCase().includes(search_query.toLowerCase())
-        : true
-    );
+  const allFiles = mediaStore.getAllFiles();
 
-  return <MediaGrid disabledSelection mediaItems={allFilteredFiles || []} />;
+  const allFilesFiltered = getFilteredData(allFiles, {
+    search_query,
+    types: searchTypes,
+  });
+
+  return <MediaGrid disabledSelection mediaItems={allFilesFiltered || []} />;
 }

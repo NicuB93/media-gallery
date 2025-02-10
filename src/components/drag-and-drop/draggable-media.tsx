@@ -1,10 +1,27 @@
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { DataSidebarProps, MediaTypes } from "@/mock/types";
+import { cn } from "@/lib/utils/cn";
+import { MediaProps, MediaTypes } from "@/mock/types";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { DNGMediaItemType } from "./types";
 
+/**
+ * DraggableMediaItem component represents a draggable media item that can be selected, edited, and displayed.
+ *
+ * @param {Object} props - The properties object.
+ * @param {MediaProps} props.item - The media item to be displayed.
+ * @param {Function} props.isSelected - Function to check if the item is selected.
+ * @param {Function} props.toggleSelect - Function to toggle the selection of the item.
+ * @param {string} props.editingId - The ID of the item currently being edited.
+ * @param {Function} props.handleTitleDoubleClick - Function to handle double-click event on the title.
+ * @param {string} props.editTitle - The current title being edited.
+ * @param {Function} props.handleTitleChange - Function to handle changes to the title input.
+ * @param {Function} props.handleTitleBlur - Function to handle blur event on the title input.
+ * @param {Function} props.handleTitleKeyDown - Function to handle key down event on the title input.
+ * @param {Array<string>} props.selectedIds - Array of selected item IDs.
+ *
+ * @returns {JSX.Element} The rendered DraggableMediaItem component.
+ */
 export const DraggableMediaItem = ({
   item,
   isSelected,
@@ -26,9 +43,8 @@ export const DraggableMediaItem = ({
     opacity: isDragging ? 0.5 : 1,
   };
 
-  const displayImagesAndGifs = (item: DataSidebarProps) =>
+  const displayImagesAndGifs = (item: MediaProps) =>
     (item.type === MediaTypes.IMAGES || item.type === MediaTypes.GIFS) &&
-    !item.isFilter &&
     item.url && (
       <img
         src={item.url}
@@ -37,10 +53,9 @@ export const DraggableMediaItem = ({
       />
     );
 
-  const displayVideos = (item: DataSidebarProps) => {
+  const displayVideos = (item: MediaProps) => {
     return (
       item.type === MediaTypes.VIDEOS &&
-      !item.isFilter &&
       item.url && (
         <video
           id="myVideo"

@@ -4,7 +4,7 @@ import * as React from "react";
 
 import Indeterminate from "@/assets/icons/indeterminate.svg";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 export const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,

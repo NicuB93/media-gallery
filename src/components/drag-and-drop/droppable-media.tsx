@@ -1,11 +1,15 @@
 import { useDroppable } from "@dnd-kit/core";
-import { ReactNode } from "react";
+import { DroppableFolderProps } from "./types";
 
-type DroppableFolderProps = {
-  folderId: number;
-  children: ReactNode;
-};
-
+/**
+ * A component that creates a droppable area for folders.
+ *
+ * @param {Object} props - The properties object.
+ * @param {string} props.folderId - The unique identifier for the folder.
+ * @param {React.ReactNode} props.children - The child elements to be rendered inside the droppable area.
+ *
+ * @returns {JSX.Element} The droppable folder component.
+ */
 export const DroppableFolder = ({
   folderId,
   children,

@@ -3,17 +3,36 @@ import { useMediaStore } from "@/stores/media-store";
 import { useSelectedMedia } from "@/stores/selected-media-store";
 import { useParams } from "@tanstack/react-router";
 import { ReactNode, useEffect } from "react";
-import { MediaTypes } from "../../../mock/types";
 
+/**
+ * HeaderCheckbox component renders a checkbox that manages the selection state of media items within a folder.
+ * It uses the `useParams` hook to get the current folder ID, and interacts with `useMediaStore` and `useSelectedMedia` stores
+ * to manage the media selection state.
+ *
+ * @param {Object} props - The component props.
+ * @param {ReactNode} [props.children] - Optional children to be rendered next to the checkbox.
+ *
+ * @returns {JSX.Element} The rendered HeaderCheckbox component.
+ *
+ * @example
+ * <HeaderCheckbox>
+ *   Select All
+ * </HeaderCheckbox>
+ *
+ * @remarks
+ * The checkbox state is determined based on the selected media IDs and the media items within the current folder.
+ * It can be in one of three states: unchecked, checked, or indeterminate.
+ * The checkbox is disabled if there are no media items in the folder.
+ *
+ * The `useEffect` hook is used to reset the selected media IDs whenever the folder ID changes.
+ */
 export const HeaderCheckbox = ({ children }: { children?: ReactNode }) => {
   const { folderId } = useParams({ strict: false });
   const selectedMediaStore = useSelectedMedia();
   const mediaStore = useMediaStore();
   const selectedIds = selectedMediaStore.selected;
 
-  const folder = mediaStore.folders.find(
-    (f) => f.type === MediaTypes.FOLDER && f.id === Number(folderId)
-  );
+  const folder = mediaStore.getFolder(Number(folderId));
 
   const getCheckboxState = () => {
     if (!folder) {

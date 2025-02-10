@@ -52,8 +52,10 @@ function RootComponent() {
       <SidebarProvider>
         <AppSidebar />
         <Layout>
-          <Outlet />
-          <TanStackRouterDevtools />
+          <div className="overflow-y-auto h-full">
+            <Outlet />
+            <TanStackRouterDevtools />
+          </div>
         </Layout>
       </SidebarProvider>
     </DndContext>

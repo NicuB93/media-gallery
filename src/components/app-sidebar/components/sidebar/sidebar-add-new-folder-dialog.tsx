@@ -15,6 +15,33 @@ import { useState } from "react";
 
 // Normally here, I would add a DB and create a folder in the cloud storage to save the media files.
 
+/**
+ * Component for adding a new folder through a dialog interface.
+ *
+ * @param {Object} props - The component props.
+ * @param {boolean} props.isOpen - Indicates whether the dialog is open.
+ * @param {function} props.handleOpenAddFolder - Function to handle the opening and closing of the dialog.
+ *
+ * @returns {JSX.Element} The rendered AddNewFolderDialog component.
+ *
+ * @remarks
+ * This component uses the `useMediaStore` hook to access the media store and add a new folder.
+ * The folder name is managed using a local state.
+ *
+ * @example
+ * ```tsx
+ * const [isDialogOpen, setDialogOpen] = useState(false);
+ *
+ * const handleDialogOpen = (open: boolean) => {
+ *   setDialogOpen(open);
+ * };
+ *
+ * <AddNewFolderDialog
+ *   isOpen={isDialogOpen}
+ *   handleOpenAddFolder={handleDialogOpen}
+ * />
+ * ```
+ */
 export const AddNewFolderDialog = ({
   isOpen,
   handleOpenAddFolder,
